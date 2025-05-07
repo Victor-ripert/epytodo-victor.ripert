@@ -1,0 +1,23 @@
+{
+  "name": "epytodo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel/issues"
+  },
+  "homepage": "https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
