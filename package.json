@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1"
   }
 }
