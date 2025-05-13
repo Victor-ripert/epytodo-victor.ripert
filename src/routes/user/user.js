@@ -16,7 +16,8 @@ router.get("/", (req, res) => {
 
 router.get("/todos", (req, res) => {
     const id = JSON.parse(atob(req.headers.authorization.split(' ')[1].split('.')[1])).id;
-    db.query(`SELECT * FROM todos WHERE user_id = ${ id }`, (err, result) => {
-        return res.send(result);
+    db.query(`SELECT * FROM todo WHERE user_id = ${ id }`, (err, result) => {
+        if (err) throw err;
+        return res.send(result[0]);
     })
 })
