@@ -22,14 +22,16 @@ router.post("/", (req, res) => {
             return res.status(400).json({ msg: "Account alredy exists" });
     })
     bcryptjs.genSalt(12, (err, salt) => {
-        if (err) throw err
+        if (err) throw err;
         bcryptjs.hash(password, salt, (err, hash) => {
             if (err) throw err;
             let query = 'INSERT INTO user (email, password, name, firstname, created_at) VALUES (?, ?, ?, ?, ?)'
             db.query(query, [email, hash, name, firstname, date], (err, results, field) => {
-                if(err) throw err
-                const token = jwt.sign({email: email, name: name, firstname: firstname}, process.env.SECRET);
-                return res.status(200).json({ "token": token });
+                if(err) throw err;
+                db.query(`SELECT * FROM user WHERE email = '${ email }'`, (err, id) => {
+                    const token = jwt.sign({id: id[0].id}, process.env.SECRET);
+                    return res.status(200).json({ "token": token });
+                })
             })
         })
     })
