@@ -1,29 +1,38 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const mysql = require('mysql2')
+const mysql = require('mysql2');
+const bcryptjs = require('bcryptjs');
+const db = require('../../config/db');
 
-const router = express.Router()
+const router = express.Router();
 
-router.use(express.json())
-router.use(express.urlencoded({ extended: true}))
-
-const connection = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_ROOT_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-})
-
-connection.connect((err) => {
-    if (err) throw err;
-        console.log("Connected successfully to the database (bien joué bogoss)")
-})
+router.use(express.json());
+router.use(express.urlencoded({ extended: true}));
 
 router.post("/", (req, res) => {
-    const {email, name, firstname, password} = req.body
-  //      res.send([email, name, firstname, password])
-        // res.json({ msg: "Bad parameter" })
+    const {email, name, firstname, password} = req.body;
+    if (!email || !name || !firstname || !password) {
+        return res.status(400).json({ msg: "Bad parameter" });
+    }
+    const date = (new Date());
+    db.query(`SELECT COUNT(*) AS count FROM user WHERE email = '${ email }';`, (err, result) => {
+        if (err) throw err;
+        if (result[0].count != 0)
+            return res.status(400).json({ msg: "Account alredy exists" });
+    })
+    bcryptjs.genSalt(12, (err, salt) => {
+        if (err) throw err
+        bcryptjs.hash(password, salt, (err, hash) => {
+            if (err) throw err;
+            let query = 'INSERT INTO user (email, password, name, firstname, created_at) VALUES (?, ?, ?, ?, ?)'
+            db.query(query, [email, hash, name, firstname, date], (err, results, field) => {
+                if(err) throw err
+                const token = jwt.sign({email: email, name: name, firstname: firstname}, process.env.SECRET);
+                return res.status(200).json({ "token": token });
+            })
+        })
+    })
 })
 
-module.exports = router
+module.exports = router;
