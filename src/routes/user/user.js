@@ -16,5 +16,8 @@ router.get("/", (req, res) => {
 
 router.get("/todos", (req, res) => {
     const id = JSON.parse(atob(req.headers.authorization.split(' ')[1].split('.')[1])).id;
+    db.query(`SELECT * FROM todos`, (err, result) => {
+        console.log(result);
+    })
     return res.send("hello");
 })

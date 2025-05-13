@@ -10,9 +10,9 @@ var db = mysql.createConnection({
 
 db.connect((err) => {
     if (err) {
-        console.log("Failed to connect to the database", err)
+        console.log("Failed to connect to the database", err);
     }
-    console.log("Connected successfully to the database (bien joué bogoss)")
+    console.log("Connected successfully to the database (bien joué bogoss)");
 })
 
 module.exports = db
