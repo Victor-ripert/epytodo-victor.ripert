@@ -14,15 +14,15 @@ router.get("/", (req, res) => {
 })
 
 router.post("/", (req, res) => {
-    console.log(req.body.title);
     const {title, description, due_time, user_id, status} = req.body;
     if (!title || !description || !due_time || !user_id || !status) {
         return res.status(400).json({ msg: "Bad parameter" });
     }
     const created_at = (new Date());
-    db.query(`INSERT INTO todo (title, description, created_at, due_time, status, user_id) VALUES (${ title }, ${ description }, ${ created_at }, ${ due_time }, ${ status }, ${ user_id })`, (err, result) => {
+    let query = 'INSERT INTO todo (title, description, created_at, due_time, status, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+    db.query(query, [title, description, created_at, due_time, status, user_id], (err, result) => {
         if (err) throw err;
-        res.status(200).json(result);
+        res.status(200).json({"id" : result.insertId, "title" : title, "description" : description, "created_at" : created_at, "due_time" : due_time, "user_id" : user_id, "status": status});
     })
 })
 

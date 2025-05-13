@@ -6,7 +6,6 @@ const router = express.Router();
 
 router.use((req, res, next) => {
     const usertoken = req.headers.authorization;
-
     if (!usertoken || !usertoken.startsWith('Bearer')) {
         return res.status(400).json({ msg: "No token, authorization denied" });
     }
