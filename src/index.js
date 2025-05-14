@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 const todosRouter = require('./routes/todos/todos.js');
 const authRouter = require('./routes/auth/auth.js');
 const userRouter = require('./routes/user/user.js');
+const usersRouter = require('./routes/user/users.js');
 const authmiddleware = require('./middleware/auth.js')
 
 app.use('/register', authRouter);
@@ -21,6 +22,7 @@ app.use(authmiddleware);
 
 app.use('/todos', todosRouter);
 app.use('/user', userRouter);
+app.use('/users', usersRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`);
