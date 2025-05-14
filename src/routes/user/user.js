@@ -18,6 +18,9 @@ router.get("/todos", (req, res) => {
     const id = JSON.parse(atob(req.headers.authorization.split(' ')[1].split('.')[1])).id;
     db.query(`SELECT * FROM todo WHERE user_id = ${ id }`, (err, result) => {
         if (err) throw err;
-        return res.status(200).json(result[0]);
+        let list_of_todos = [];
+        for (let i = 0; result[i]; i++)
+            list_of_todos.push(result[i])
+        return res.status(200).json(list_of_todos);
     })
 })
