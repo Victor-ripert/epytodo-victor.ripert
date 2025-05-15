@@ -15,7 +15,9 @@ const authRouter = require('./routes/auth/auth.js');
 const userRouter = require('./routes/user/user.js');
 const usersRouter = require('./routes/user/users.js');
 const authmiddleware = require('./middleware/auth.js')
+const loginRouter = require('./routes/auth/login.js');
 
+app.use('/login', loginRouter);
 app.use('/register', authRouter);
 
 app.use(authmiddleware);
