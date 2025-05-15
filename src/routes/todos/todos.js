@@ -37,14 +37,16 @@ router.post("/", (req, res) => {
         if (err) throw err;
         if (!result[0].count)
             return res.status(400).json({ msg: "Bad parameter" });
-        });
-    const created_at = (new Date());
-    let query = 'INSERT INTO todo (title, description, created_at, due_time, status, user_id) VALUES (?, ?, ?, ?, ?, ?)';
-    db.query(query, [title, description, created_at, due_time, status, user_id], (err, result) => {
-        if (err) throw err;
-        res.status(200).json({"id" : result.insertId, "title" : title, "description" : description,
-             "created_at" : created_at, "due_time" : due_time, "user_id" : user_id, "status": status});
-    })
+        else {
+            const created_at = (new Date());
+            let query = 'INSERT INTO todo (title, description, created_at, due_time, status, user_id) VALUES (?, ?, ?, ?, ?, ?)';
+            db.query(query, [title, description, created_at, due_time, status, user_id], (err, result) => {
+                if (err) throw err;
+                return res.status(200).json({"id" : result.insertId, "title" : title, "description" : description,
+                    "created_at" : created_at, "due_time" : due_time, "user_id" : user_id, "status": status});
+            })
+        }
+    });
 })
 
 router.put("/:id", (req, res) => {
