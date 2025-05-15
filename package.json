@@ -1,7 +1,7 @@
 {
   "name": "epytodo",
   "version": "1.0.0",
-  "description": "",
+  "description": "back end server for todo list",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel.git"
   },
-  "author": "",
+  "author": "Alexis Bihel, Mathieu Cauet, Victor Rippert",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/EpitechPGEPromo2029/B-WEB-200-PAR-2-1-epytodo-alexis.bihel/issues"
