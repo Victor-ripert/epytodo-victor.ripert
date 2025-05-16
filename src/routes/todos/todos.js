@@ -56,9 +56,11 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
     const id = Number(req.params.id);
     const {title, description, due_time, user_id, status} = req.body;
-    if (!title || !description || !due_time || !user_id || !status) {
+    if (!title || !description || !due_time || !user_id) {
         return res.status(400).json({ msg: "Bad parameter" });
     }
+    if (!status)
+        status = "not started";
     db.query(`SELECT COUNT(*) AS count FROM user WHERE id = '${ user_id }';`, (err, result) => {
         if (err) throw err;
         if (!result[0].count)
