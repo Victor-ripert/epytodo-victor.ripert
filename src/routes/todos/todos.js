@@ -8,7 +8,7 @@ const { parse } = require('dotenv');
 router.use(express.json())
 
 router.get("/", (req, res) => {
-    db.query('SELECT * FROM todo;', (err, result) => {
+    db.query('SELECT id, title, description, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, DATE_FORMAT(due_time, "%Y-%m-%d %h:%i:%s") AS due_time, user_id, status FROM todo ;', (err, result) => {
         if (err) throw err;
         let array = [];
         for (let index = 0; index != result.length; index++) {
@@ -20,7 +20,7 @@ router.get("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
     const id = Number(req.params.id);
-    db.query(`SELECT * FROM todo WHERE id = '${ id }'`, (err, result) => {
+    db.query(`SELECT id, title, description, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, DATE_FORMAT(due_time, "%Y-%m-%d %h:%i:%s") AS due_time, user_id, status FROM todo WHERE id = '${ id }';`, (err, result) => {
         if (err) throw err;
         if (!result[0]) return res.status(400).json({ msg: "Not found" });
         return res.status(200).json({"id" : result[0].id, "title" : result[0].title, "description" : result[0].description,
@@ -29,21 +29,25 @@ router.get("/:id", (req, res) => {
 })
 
 router.post("/", (req, res) => {
-    const {title, description, due_time, user_id, status} = req.body;
-    if (!title || !description || !due_time || !user_id || !status) {
+    let {title, description, due_time, user_id, status} = req.body;
+    if (!title || !description || !due_time || !user_id ) {
         return res.status(400).json({ msg: "Bad parameter" });
     }
-    db.query(`SELECT COUNT(*) AS count FROM user WHERE id = '${ user_id }';`, (err, result) => {
+    if (!status)
+        status = "not started";
+    db.query(`SELECT COUNT(*) AS count FROM user WHERE id = '${ user_id }';`,(err, result) => {
         if (err) throw err;
         if (!result[0].count)
             return res.status(400).json({ msg: "Bad parameter" });
         else {
-            const created_at = (new Date());
-            let query = 'INSERT INTO todo (title, description, created_at, due_time, status, user_id) VALUES (?, ?, ?, ?, ?, ?)';
-            db.query(query, [title, description, created_at, due_time, status, user_id], (err, result) => {
+            let query = 'INSERT INTO todo (title, description, due_time, status, user_id) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [title, description, due_time, status, user_id], (err, result) => {
                 if (err) throw err;
-                return res.status(200).json({"id" : result.insertId, "title" : title, "description" : description,
-                    "created_at" : created_at, "due_time" : due_time, "user_id" : user_id, "status": status});
+                db.query(`SELECT id, title, description, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, DATE_FORMAT(due_time, "%Y-%m-%d %h:%i:%s") AS due_time, user_id, status FROM todo WHERE id = '${ result.insertId }';`, (err, result) => {
+                    if (err) throw err;
+                    return res.status(200).json({"id" : result[0].id, "title" : result[0].title, "description" : result[0].description,
+                         "created_at" : result[0].created_at, "due_time" : result[0].due_time, "user_id" : result[0].user_id, "status": result[0].status});
+                })
             })
         }
     });
@@ -62,7 +66,7 @@ router.put("/:id", (req, res) => {
     });
     db.query(`UPDATE todo SET title = '${ title }', description = '${ description }', due_time = '${ due_time }', user_id = '${ user_id }', status = '${ status }' WHERE id = ${ id }`, (err, result) => {
         if (err) throw err;
-        db.query(`SELECT * FROM todo WHERE id = ${ id }`, (err, result) => {
+        db.query(`SELECT id, title, description, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, DATE_FORMAT(due_time, "%Y-%m-%d %h:%i:%s") AS due_time, user_id, status FROM todo WHERE id = '${ id }'`, (err, result) => {
             if (err) throw err;
             return res.status(200).json({"id" : result[0].id, "title" : result[0].title, "description" : result[0].description,
                  "created_at" : result[0].created_at, "due_time" : result[0].due_time, "user_id" : result[0].user_id, "status" : result[0].status});
