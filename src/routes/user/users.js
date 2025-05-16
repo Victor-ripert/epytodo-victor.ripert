@@ -14,13 +14,13 @@ router.get("/:element", (req, res) => {
     const element = (req.params.element);
     const id = Number(element);
     if (!id) {
-        db.query(`SELECT * FROM user WHERE email = '${ element }'`, (err, result) => {
+        db.query(`SELECT id, email, password, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, firstname, name FROM user WHERE email = '${ element }';`, (err, result) => {
             if (err) throw err;
             if (!result[0]) return res.status(400).json({ msg: "Not found" });
             return res.status(200).json({"id" : result[0].id, "email" : result[0].email, "password" : result[0].password, "created_at" : result[0].created_at, "firstname" : result[0].firstname, "name" : result[0].name});
         })
     } else {
-        db.query(`SELECT * FROM user WHERE id = ${ id }`, (err, result) => {
+        db.query(`SELECT id, email, password, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, firstname, name FROM user WHERE id = '${ id }'`, (err, result) => {
             if (err) throw err;
             if (!result[0]) return res.status(400).json({ msg: "Not found" });
             return res.status(200).json({"id" : result[0].id, "email" : result[0].email, "password" : result[0].password, "created_at" : result[0].created_at, "firstname" : result[0].firstname, "name" : result[0].name});
@@ -48,7 +48,7 @@ router.put("/:id", (req, res) => {
             })
         })
     })
-    db.query(`SELECT * FROM user WHERE id = ${ id }`, (err, result) => {
+    db.query(`SELECT id, email, password, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, firstname, name FROM user WHERE id = ${ id }`, (err, result) => {
         if (err) throw err;
         return res.status(200).json({"id" : result[0].id, "email" : result[0].email, "password" : result[0].password, "created_at" : result[0].created_at, "firstname" : result[0].firstname, "name" : result[0].name});
     })
