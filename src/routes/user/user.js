@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 
 router.get("/todos", (req, res) => {
     const id = JSON.parse(atob(req.headers.authorization.split(' ')[1].split('.')[1])).id;
-    db.query(`SELECT * FROM todo WHERE user_id = ${ id }`, (err, result) => {
+    db.query(`SELECT id, title, description, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i:%s") AS created_at, DATE_FORMAT(due_time, "%Y-%m-%d %h:%i:%s") AS due_time, user_id, status FROM todo WHERE user_id = '${ id }';`, (err, result) => {
         if (err) throw err;
         let list_of_todos = [];
         for (let i = 0; result[i]; i++)
